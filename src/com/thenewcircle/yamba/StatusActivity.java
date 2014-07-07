@@ -67,8 +67,11 @@ public class StatusActivity extends Activity {
 
 						try {
 							yambaClient.postStatus(mTextStatus.getText().toString());
+                            Toast.makeText(StatusActivity.this, "Successfuly posted status", Toast.LENGTH_SHORT).show();
+
 						} catch (YambaClientException e) {
 							// TODO Auto-generated catch block
+							Toast.makeText(StatusActivity.this, "Failed to post status", Toast.LENGTH_SHORT).show();
 							e.printStackTrace();
 						}
 
