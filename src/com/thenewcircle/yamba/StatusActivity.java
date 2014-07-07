@@ -1,6 +1,9 @@
 
 package com.thenewcircle.yamba;
 
+import com.marakana.android.yamba.clientlib.YambaClient;
+import com.marakana.android.yamba.clientlib.YambaClientException;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -44,11 +47,41 @@ public class StatusActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Toast.makeText(StatusActivity.this, "Button Clicked!",
-						Toast.LENGTH_SHORT).show();
+				
+				
+								
+				
+				// Required: 
+				// 1. See what's on the edit text
+				// 2. When button is pressed (That's why we're here!) - Post to cloud
+				// Means:
+				// Yamba Client
+				
+				Log.d(TAG, "Post status button clicked!");
 
-				Log.d("IntelTag", "onClicked!");
+				new Thread() {
+					public void run() {
+
+						YambaClient yambaClient = 
+								new YambaClient("student", "password");
+
+						try {
+							yambaClient.postStatus(mTextStatus.getText().toString());
+						} catch (YambaClientException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					};
+				}.start();
+				
+				/*   ERROR: Network on main thread
+				try {
+					yambaClient.postStatus(mTextStatus.getText().toString());
+				} catch (YambaClientException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
 			}
 		});
 
