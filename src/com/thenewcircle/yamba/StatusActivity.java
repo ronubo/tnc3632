@@ -5,7 +5,9 @@ import com.marakana.android.yamba.clientlib.YambaClient;
 import com.marakana.android.yamba.clientlib.YambaClientException;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,6 +29,8 @@ public class StatusActivity extends Activity {
 	private int mDefaultTextCountColor;
 	private static final int MAX_TWEET_LENGTH = 140;
 	private static final int TWEET_LENGTH_WARNING_THRESHOLD = 50;
+	
+	private YambaClient mYambaClient;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,10 @@ public class StatusActivity extends Activity {
 		mTextCount.setText(Integer.toString(MAX_TWEET_LENGTH));
 		mDefaultTextCountColor = mTextCount.getTextColors().getDefaultColor();
 
+		
+		mYambaClient = 
+				new YambaClient("student", "password");
+		
 		mButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -58,33 +66,9 @@ public class StatusActivity extends Activity {
 				// Yamba Client
 				
 				Log.d(TAG, "Post status button clicked!");
-
-				new Thread() {
-					public void run() {
-
-						YambaClient yambaClient = 
-								new YambaClient("student", "password");
-
-						try {
-							yambaClient.postStatus(mTextStatus.getText().toString());
-                            Toast.makeText(StatusActivity.this, "Successfuly posted status", Toast.LENGTH_SHORT).show();
-
-						} catch (YambaClientException e) {
-							// TODO Auto-generated catch block
-							Toast.makeText(StatusActivity.this, "Failed to post status", Toast.LENGTH_SHORT).show();
-							e.printStackTrace();
-						}
-
-					};
-				}.start();
 				
-				/*   ERROR: Network on main thread
-				try {
-					yambaClient.postStatus(mTextStatus.getText().toString());
-				} catch (YambaClientException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
+				// TODO AsyncTask
+				new PostTask().execute(mTextStatus.getText().toString());
 			}
 		});
 
@@ -168,5 +152,45 @@ public class StatusActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		Log.d(TAG,"onDestroyed");
+	}
+	
+	class PostTask extends AsyncTask<String, Void, String> {
+		
+//		Context mContext;
+//		PostTask (Context ctx) { mContext = ctx ; }
+//		PostTask ()
+		
+		private ProgressDialog mProgress = new ProgressDialog(StatusActivity.this);
+		
+		@Override
+		protected void onPreExecute() {			
+			super.onPreExecute();
+			mProgress.setTitle("Post Status");
+			mProgress.setMessage("Please wait...");
+			mProgress.show();
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			String status = params[0];			
+
+			try {
+				mYambaClient.postStatus(status);
+				Log.d(TAG,"Posted status in background");
+				return "Successfuly posted status";                
+			} catch (YambaClientException e) {
+				Log.e(TAG, "Failed to post status in background" );
+				e.printStackTrace();
+				return "Failed to post status";
+			}
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {			
+			super.onPostExecute(result);
+			mProgress.dismiss();
+			Toast.makeText(StatusActivity.this, result, Toast.LENGTH_SHORT).show();
+		}
+		
 	}
 }
