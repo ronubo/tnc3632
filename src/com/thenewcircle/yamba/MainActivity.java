@@ -17,8 +17,6 @@ public class MainActivity extends Activity {
 	}
 	
 	
-	
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main , menu);
@@ -28,14 +26,18 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		if (item.getItemId() == R.id.item_post) {
-			Intent intent = new Intent(this, StatusActivity.class);
-			startActivity(intent);
-			
+		switch (item.getItemId()) {
+		case R.id.action_tweet:	
+			startActivity(new Intent(this, StatusActivity.class));
+			return true; 
+		case R.id.action_refresh:
+			startService(new Intent(this, RefreshService.class));
+			return true;
+		default:
+			return false;
 		}
-		Log.d(TAG, "Clicked menu item: " + item.getItemId());
-		return super.onMenuItemSelected(featureId, item);
 	}
+		
 	
 	
 
