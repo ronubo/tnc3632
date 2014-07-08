@@ -3,7 +3,9 @@ package com.thenewcircle.yamba;
 import java.util.List;
 
 import android.app.IntentService;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.marakana.android.yamba.clientlib.YambaClient;
@@ -12,8 +14,9 @@ import com.marakana.android.yamba.clientlib.YambaClientException;
 
 public class RefreshService extends IntentService {
 	private final static String TAG = RefreshService.class.getSimpleName();
-
 	private final static int MAX_FETCH_POSTS = 20;
+	
+	private DbHelper mDbHelper;
 	
 	public RefreshService(String name) {
 		super(name);
@@ -35,6 +38,10 @@ public class RefreshService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 
+		mDbHelper = new DbHelper(this);
+		SQLiteDatabase db = mDbHelper.getWritableDatabase();
+		ContentValues values = new ContentValues(); // Defines ORM
+		
 		YambaClient cloud = new YambaClient("student","password");
 
 		List<Status> timeline;
@@ -42,11 +49,21 @@ public class RefreshService extends IntentService {
 			timeline = cloud.getTimeline(MAX_FETCH_POSTS);		
 
 			for (Status status : timeline) {
+				// Log values logcat 
 				Log.d(TAG, 
 						String.format("Status: %s said %s at %s", 
 								status.getUser(), 
 								status.getMessage(), 
-								status.getCreatedAt().toString()));			
+								status.getCreatedAt().toString()));				
+				// Add values to DB
+				values.clear(); // Not necessary here, since we update all fields, but why not.
+				values.put(StatusContract.Column.ID, status.getId());
+				values.put(StatusContract.Column.USER, status.getUser());
+				values.put(StatusContract.Column.MESSAGE, status.getMessage());
+				values.put(StatusContract.Column.CREATED_AT, status.getCreatedAt().getTime()); // getTime()
+				db.insert(StatusContract.TABLE, null, values);
+				
+				
 			}
 		} catch (YambaClientException e) {
 			Log.e(TAG, "Failed to retreive timeline" );
