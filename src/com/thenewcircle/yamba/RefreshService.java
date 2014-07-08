@@ -1,38 +1,42 @@
 package com.thenewcircle.yamba;
 
-import java.util.Date;
 import java.util.List;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Intent;
-import android.os.IBinder;
 import android.util.Log;
 
 import com.marakana.android.yamba.clientlib.YambaClient;
 import com.marakana.android.yamba.clientlib.YambaClient.Status;
 import com.marakana.android.yamba.clientlib.YambaClientException;
 
-public class RefreshService extends Service {
-	private final static String TAG = Service.class.getSimpleName();
-	
+public class RefreshService extends IntentService {
+	private final static String TAG = RefreshService.class.getSimpleName();
+
 	private final static int MAX_FETCH_POSTS = 20;
-	@Override
-	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public RefreshService(String name) {
+		super(name);
+		// TODO Auto-generated constructor stub
 	}
 	
+	public RefreshService() {
+		this(TAG);
+	}
+
+		
 	@Override
 	public void onCreate() {
 		Log.d(TAG,"onCreated");
 		super.onCreate();
 	}
 	
-	// Only thing we really care about
+	// Only thing we care about for IntentService!
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
+	protected void onHandleIntent(Intent intent) {
+
 		YambaClient cloud = new YambaClient("student","password");
-		
+
 		List<Status> timeline;
 		try {
 			timeline = cloud.getTimeline(MAX_FETCH_POSTS);		
@@ -48,9 +52,8 @@ public class RefreshService extends Service {
 			Log.e(TAG, "Failed to retreive timeline" );
 			e.printStackTrace();
 		}
-		
-		return super.onStartCommand(intent, flags, startId);
-	}
+	
+	}	
 	
 	@Override
 	@Deprecated
@@ -64,6 +67,7 @@ public class RefreshService extends Service {
 	public void onDestroy() {
 		Log.d(TAG,"onDestroyed");
 		super.onDestroy();
-	}	
+	}
+
 
 }
