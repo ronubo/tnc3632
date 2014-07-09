@@ -11,10 +11,17 @@
  		>
     </item><item
         android:id="@+id/action_refresh"
-        android:orderInCategory="200"
-        android:title="Refresh"
         android:icon="@android:drawable/ic_menu_rotate"
- 	android:showAsAction="always|withText"
+        android:orderInCategory="200"
+        android:showAsAction="always|withText"
+        android:title="Refresh">
+
+    </item><item
+        android:id="@+id/action_purge"
+        android:icon="@android:drawable/ic_delete"
+        android:title="@string/purge"
+        android:orderInCategory="300"
+        android:showAsAction="always|withText"
         >
     </item>
 </menu>

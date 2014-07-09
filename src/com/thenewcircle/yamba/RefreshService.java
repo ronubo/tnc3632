@@ -61,8 +61,11 @@ public class RefreshService extends IntentService {
 				values.put(StatusContract.Column.USER, status.getUser());
 				values.put(StatusContract.Column.MESSAGE, status.getMessage());
 				values.put(StatusContract.Column.CREATED_AT, status.getCreatedAt().getTime()); // getTime()
-				db.insert(StatusContract.TABLE, null, values);
 				
+				// This commented line would yield exception: db.insert(StatusContract.TABLE, null, values);
+				// Next line will solve it:
+				db.insertWithOnConflict(StatusContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE );
+
 				
 			}
 		} catch (YambaClientException e) {
