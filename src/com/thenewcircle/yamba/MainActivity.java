@@ -11,9 +11,9 @@ public class MainActivity extends Activity {
 	
 	static final String TAG = MainActivity.class.getSimpleName();
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 	}
 	
 	
@@ -42,8 +42,5 @@ public class MainActivity extends Activity {
 			return false;
 		}
 	}
-		
-	
-	
 
 }

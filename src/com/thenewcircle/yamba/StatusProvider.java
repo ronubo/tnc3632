@@ -103,7 +103,8 @@ public class StatusProvider extends ContentProvider {
 		
 		String where;  // to figure out the selection args by the Uri.
 		
-		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();		
+		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+		qb.setTables(StatusContract.TABLE);
 		switch (sUriMatcher.match(uri)) {
 		case  StatusContract.STATUS_DIR:
 			// in case of a directory we're not going to do anything
