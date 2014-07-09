@@ -57,6 +57,7 @@ public class StatusProvider extends ContentProvider {
 		if (rowId != -1) {
 			String id = values.getAsString(StatusContract.Column.ID);
 			ret = Uri.withAppendedPath(uri, id);
+			getContext().getContentResolver().notifyChange(uri, null);
 		}
 		
 		Log.d(TAG,"inserted uri " + ret);
@@ -122,6 +123,8 @@ public class StatusProvider extends ContentProvider {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 						
 		Cursor cursor = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+		
+		cursor.setNotificationUri(getContext().getContentResolver(), uri);
 		
 		Log.d(TAG, "queried records: " + cursor.getCount() );
 		return cursor;				

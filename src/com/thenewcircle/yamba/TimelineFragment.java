@@ -3,6 +3,7 @@ package com.thenewcircle.yamba;
 import android.app.ListFragment;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.widget.CursorAdapter;
 import android.widget.SimpleCursorAdapter;
 
 public class TimelineFragment extends ListFragment {
@@ -19,7 +20,7 @@ public class TimelineFragment extends ListFragment {
 
 		SimpleCursorAdapter adapter =  new SimpleCursorAdapter(getActivity(), 
 				android.R.layout.simple_list_item_2, 
-				cursor, FROM, TO, 0);
+				cursor, FROM, TO, CursorAdapter.FLAG_AUTO_REQUERY );
 
 		setListAdapter(adapter);
 	}
