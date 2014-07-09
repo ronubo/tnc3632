@@ -1,16 +1,30 @@
 package com.thenewcircle.yamba;
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 
 public class StatusContract {
-	public static final String DB_NAME = "timeline.db";
-	public static final int DB_VERSION = 1;
-	public static final String TABLE = "status"; //table name
+    // DB specific constants
+    public static final String DB_NAME = "timeline.db";
+    public static final int DB_VERSION = 1;
+    public static final String TABLE = "status"; //table name
 
-	class Column {
-		public static final String ID = BaseColumns._ID;
-		public static final String USER = "user";
-		public static final String MESSAGE = "message";
-		public static final String CREATED_AT = "created_at";
-	}
+    // Provider specific contracts
+    // Example: content://com.thenewcircle.yamba.provider/status/47" //Or without the number for DIR
+    public static final String AUTHORITY = "com.thenewcircle.yamba.provider";
+    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE);
+    public static final int STATUS_ITEM = 1;
+    public static final int STATUS_DIR = 2;
+    public static final String STATUS_TYPE_ITEM = "vnd.android.cursor.item/vnd.com.thenewcircle.provider.status";
+    public static final String STATUS_TYPE_DIR = "vnd.android.cursor.dir/vnd.com.thenewcircle.provider.status";
+    public static final String DEFAULT_SORT = Column.CREATED_AT + " DESC";
+
+    class Column {
+            public static final String ID = BaseColumns._ID;
+            public static final String USER = "user";
+            public static final String MESSAGE = "message";
+            public static final String CREATED_AT = "created_at";
+    }
+
+
 }

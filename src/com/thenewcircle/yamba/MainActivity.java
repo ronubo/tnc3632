@@ -2,11 +2,10 @@ package com.thenewcircle.yamba;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	
@@ -35,10 +34,10 @@ public class MainActivity extends Activity {
 			startService(new Intent(this, RefreshService.class));
 			return true;
 		case R.id.action_purge:
-			DbHelper dbHelper = new DbHelper(MainActivity.this);
-			SQLiteDatabase db = dbHelper.getWritableDatabase();
-			db.delete(StatusContract.TABLE, null, null);
-			return true;
+		     int rows = getContentResolver().delete(StatusContract.CONTENT_URI, null, null);
+             Toast.makeText(this, "Deleted " + rows+ " rows",Toast.LENGTH_SHORT).show();
+             return true;
+
 		default:
 			return false;
 		}

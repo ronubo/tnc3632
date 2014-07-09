@@ -16,7 +16,7 @@ public class RefreshService extends IntentService {
 	private final static String TAG = RefreshService.class.getSimpleName();
 	private final static int MAX_FETCH_POSTS = 20;
 	
-	private DbHelper mDbHelper;
+	// RIP db private DbHelper mDbHelper;
 	
 	public RefreshService(String name) {
 		super(name);
@@ -38,8 +38,8 @@ public class RefreshService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 
-		mDbHelper = new DbHelper(this);
-		SQLiteDatabase db = mDbHelper.getWritableDatabase();
+		//RIP db mDbHelper = new DbHelper(this);
+		//RIP db SQLiteDatabase db = mDbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues(); // Defines ORM
 		
 		YambaClient cloud = new YambaClient("student","password");
@@ -64,7 +64,10 @@ public class RefreshService extends IntentService {
 				
 				// This commented line would yield exception: db.insert(StatusContract.TABLE, null, values);
 				// Next line will solve it:
-				db.insertWithOnConflict(StatusContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE );
+				
+				//RIP db: db.insertWithOnConflict(StatusContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE );
+                getContentResolver().insert(StatusContract.CONTENT_URI, values);
+
 
 				
 			}
